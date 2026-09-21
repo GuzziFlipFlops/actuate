@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import '@fontsource-variable/inter';
 import '@fontsource-variable/space-grotesk';
-import '@fontsource/instrument-serif/latin-400-italic.css';
 import './styles.css';
 import App from './App';
 

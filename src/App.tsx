@@ -1,27 +1,24 @@
 import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties, PointerEvent } from 'react';
-import BoardPicker from './BoardPicker';
-import { ArrowDown, ArrowDownLeft, ArrowRight, ArrowUpRight, Check, ChevronDown, Code2, Cpu, ExternalLink, Menu, Pause, Play, Radio, RotateCw, Sparkles, Terminal, Wifi, X, Zap } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, ChevronDown, ExternalLink, Menu, Pause, Play, RotateCw, Wifi, X, Zap } from 'lucide-react';
 
 const SLACK = 'https://hackclub.slack.com/archives/C0C421M2MU0';
 const candidate = import.meta.env.VITE_RSVP_URL?.trim();
 const RSVP = candidate && /^https:\/\//i.test(candidate) ? candidate : 'https://rsvp.hackclub.community/actuate';
 const projects = [
-  { title: 'Make wireless work for you.', category: 'WI-FI / BLUETOOTH TOOLS', type: 'wireless', description: 'Write a BLE remote or a Wi-Fi signal monitor. A useful little tool, powered by your code.', tags: ['Wi-Fi tools', 'Bluetooth LE'] },
-  { title: 'A tiny internet of things.', category: 'CONNECTED', type: 'network', description: 'A room full of sensors. A dashboard you wrote. Your own little network.', tags: ['IoT networks', 'Web servers'] },
-  { title: 'A web server in your pocket.', category: 'WEB SERVERS / DASHBOARDS', type: 'server', description: 'Serve a page from the ESP32, show live readings, or control your device through a dashboard.', tags: ['Embedded web servers', 'Dashboards'] },
-  { title: 'Give your desk a brain.', category: 'SENSOR SYSTEMS', type: 'device', description: 'A weather station, a smart display, or the device you wish existed.', tags: ['Smart devices', 'Sensor systems'] },
-  { title: 'Make the pixels move.', category: 'ROBOTICS', type: 'robot', description: 'A robot arm. A curious rover. A four-legged friend with a mind of its own.', tags: ['Robot arms', 'Rovers', 'Quadrupeds'] },
-  { title: 'See things differently.', category: 'VISION', type: 'camera', description: 'Give your project eyes with an ESP32 camera and a little creative code.', tags: ['Cameras', 'Computer vision'] },
+  { title: 'Wi-Fi & Bluetooth tools', type: 'wireless', description: 'A BLE remote or a Wi-Fi signal monitor.', color: '#7ccaf4' },
+  { title: 'IoT networks', type: 'network', description: 'Connect a few boards. Make them talk.', color: '#f2c66d' },
+  { title: 'Web servers & dashboards', type: 'server', description: 'Host a page right on your ESP32.', color: '#b6a0ed' },
+  { title: 'Sensors & displays', type: 'device', description: 'Check the weather. Log your plant’s soil moisture.', color: '#d2fa69' },
+  { title: 'Robots, arms & rovers', type: 'robot', description: 'A rover, a robot arm, or a quadruped.', color: '#ff9587' },
+  { title: 'Cameras & vision', type: 'camera', description: 'See what your rover sees over Wi-Fi.', color: '#80d9bd' },
 ];
 const faqs = [
-  ['Do I need prior hardware experience?', 'Nope. Actuate is being designed for beginners, including people who have never used a microcontroller. Planned guides will cover setup, your first LED, sensors, networking, and motors.'],
-  ['Can I make a software-heavy ESP32 project?', 'Yes—that fits the current broader ESP32 proposal. Think custom firmware, a web server running on the board, or an IoT network. Your original code should meaningfully use the ESP32. Final submission rules will be confirmed before launch.'],
-  ['Do I need to use an ESP32?', 'Yes, the ESP32 family is the focus of Actuate. Pick a board suited to your idea. Capabilities vary between models, so check Wi-Fi, Bluetooth, camera support, and available pins before choosing one.'],
-  ['How expensive can my build be?', 'For hardware-heavy builds, the current target is roughly $30–50 USD for the bill of materials (BOM). This is not a minimum spend or a universal requirement: software-heavy ESP32 projects can use far fewer parts. It is also not an approved grant amount. Funding, eligible parts, and shipping details are still being worked out.'],
-  ['What does “meaningfully use the ESP32” mean?', 'The board should be an essential part of your idea: use its Wi-Fi or Bluetooth, serve a web page from it, read sensors, process camera input, control motors, or build useful device firmware. Simply running arbitrary code on an ESP32 without a meaningful role for the board is not the goal. Final submission rules will be confirmed before launch.'],
-  ['Is Actuate launched yet?', 'Not yet! Actuate is a proposed Hack Club YSWS. Dates, funding, eligibility, and final requirements are not confirmed. Join #actuate to follow the proposal and help shape it.'],
-  ['What is a YSWS, anyway?', 'It stands for “You Ship, We Ship.” You make an original project; the program helps you get something to keep building with. For Actuate, the proposed support is ESP32 boards, parts or hardware grants, and beginner tutorials.'],
+  ['Can I mostly write software?', 'Yep. Firmware, wireless tools, web servers, and IoT networks all count. You don’t have to build a robot.'],
+  ['Does it have to use an ESP32?', 'Yes. Use it for something the project needs: wireless, sensors, a display, a camera, motors, or GPIO. Just running unrelated code on it doesn’t count.'],
+  ['What if I’ve never used one?', 'You’re welcome here. We’re writing guides from the first upload onward, and you can ask for help in #actuate.'],
+  ['How much can I spend?', 'Aim for a $30–50 bill of materials for hardware-heavy builds. Software projects can use fewer parts; there’s no minimum spend.'],
+  ['When does it start?', 'We’re still putting Actuate together. Dates, funding, and final rules aren’t set yet. RSVP and join #actuate for updates.'],
 ];
 
 function Mark() { return <svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="m7 28 9-20h5l9 20h-7l-1.7-5H15l-2 5H7Zm10-10h3l-1.5-4-1.5 4Z" fill="currentColor"/><path d="M1 17h7m21 0h6" stroke="currentColor" strokeWidth="2"/></svg>; }
@@ -68,9 +65,9 @@ function Board({ mode }: { mode: number }) {
     </g></g>
     <g className={`wifi-art ${mode===1?'active':''}`} transform="translate(484 94)" stroke="#d2fa69" strokeWidth="2" fill="none"><path d="M-20 3q20-19 40 0"/><path d="M-13 11q13-12 26 0"/><path d="M-6 19q6-6 12 0"/><circle cy="26" r="2" fill="#d2fa69"/></g>
     <g transform="translate(468 330)"><rect x="-22" y="-18" width="49" height="38" rx="5" fill="#2f3727" stroke="#78855f"/><circle cx="2" cy="0" r="8" fill="#afb799"/><g className={mode===2?'servo-arm active':'servo-arm'}><rect x="-3" y="-25" width="10" height="50" rx="5" fill="#d7dfc1"/><circle cx="2" cy="0" r="3" fill="#445135"/></g></g>
-    <text x="23" y="108" fill="#85917c" fontSize="9" letterSpacing="1.5" fontFamily="monospace">INPUT / YOUR IDEA</text>
-    <text x="416" y="177" fill="#85917c" fontSize="9" letterSpacing="1.5" fontFamily="monospace">WIRELESS / ON</text>
-    <text x="427" y="416" fill="#85917c" fontSize="9" letterSpacing="1.5" fontFamily="monospace">OUTPUT / REAL LIFE</text>
+    <text x="23" y="108" fill="#85917c" fontSize="9" letterSpacing="1.5" fontFamily="monospace">sensor</text>
+    <text x="416" y="177" fill="#85917c" fontSize="9" letterSpacing="1.5" fontFamily="monospace">Wi-Fi</text>
+    <text x="427" y="416" fill="#85917c" fontSize="9" letterSpacing="1.5" fontFamily="monospace">servo</text>
   </svg>;
 }
 
@@ -129,62 +126,61 @@ export default function App() {
   return <>
     <a className="skip-link" href="#main">Skip to content</a>
     <header className="header">
+      <a className="hackclub-flag" href="https://hackclub.com/" target="_blank" rel="noreferrer"><img src="/hackclub-flag.svg" alt="Hack Club" width="160" height="100"/></a>
       <a className="brand" href="#" aria-label="Actuate home"><Mark/><span>actuate<span className="brand-dot">.</span></span></a>
       <nav className={menu?'nav open':'nav'} aria-label="Main navigation">
-        <a href="#about" onClick={()=>setMenu(false)}>The idea</a><a href="#build" onClick={()=>setMenu(false)}>What to build</a><a href="#boards" onClick={()=>setMenu(false)}>Pick your ESP32</a><a href="#how" onClick={()=>setMenu(false)}>How it works</a><a href="#faq" onClick={()=>setMenu(false)}>FAQ</a>
+        <a href="#build" onClick={()=>setMenu(false)}>build</a><a href="#how" onClick={()=>setMenu(false)}>how</a><a href="#start" onClick={()=>setMenu(false)}>learn</a><a href="#faq" onClick={()=>setMenu(false)}>faq</a>
       </nav>
       <div className="header-actions"><a className="button nav-rsvp" href={RSVP} target="_blank" rel="noreferrer">RSVP <ArrowUpRight size={16}/></a><button className="menu-button icon-button" aria-label={menu?'Close navigation':'Open navigation'} aria-expanded={menu} onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button></div>
     </header>
     <main id="main">
       <section className="hero section-shell">
         <div className="hero-copy">
-          <div className="eyebrow hero-eyebrow"><span className="status-dot"/> A HACK CLUB YSWS IN THE MAKING</div>
-          <h1>Little board.<br/><span>Big ideas.</span><svg className="headline-spark" viewBox="0 0 60 60" aria-hidden="true"><path d="m30 1 3 21L49 8 39 27l21 3-21 5 10 18-17-14-2 21-5-21L8 51l13-18L0 30l21-5L8 8l18 13Z" fill="currentColor"/></svg></h1>
+          <div className="eyebrow hero-eyebrow"><span className="status-dot"/> A Hack Club YSWS in the making</div>
+          <h1>Little board.<br/><span>Big ideas.</span></h1>
           <h2 className="hero-subtitle">Build something with an ESP32.</h2>
-          <p className="hero-description">Make a thing that senses, connects, or moves.<br className="desktop-break"/> We’re putting the tools to build it in your hands.</p>
-          <div className="hero-buttons"><a className="button primary" href={RSVP} target="_blank" rel="noreferrer">I’m in. RSVP <ArrowUpRight size={19}/></a><a className="button secondary" href={SLACK} target="_blank" rel="noreferrer"><span className="hash">#</span> Join #actuate <ArrowUpRight size={16}/></a></div>
-          <div className="hero-note"><span className="small-dot"/> No hardware experience required. <span className="note-divider"/> Wild ideas welcome</div>
+          <p className="hero-description">Make a thing that senses, connects, or moves.</p>
+          <div className="hero-buttons"><a className="button primary" href={RSVP} target="_blank" rel="noreferrer">RSVP <ArrowUpRight size={19}/></a><a className="button secondary" href={SLACK} target="_blank" rel="noreferrer">Join #actuate <ArrowUpRight size={16}/></a></div>
+          <p className="hero-note">No hardware experience required.</p>
         </div>
         <div className="hero-lab" onPointerMove={tilt} onPointerLeave={resetTilt}>
           <div className="lab-corner top-left"/><div className="lab-corner bottom-right"/>
-          <div className="lab-topline"><span>THE POSSIBILITIES BOARD</span><span><span className="status-dot"/> LIVE DEMO</span></div>
+          <div className="lab-topline"><span>ESP32</span><span><span className="status-dot"/> hello, world!</span></div>
           <div className="orbital orbital-one"/><div className="orbital orbital-two"/>
           <div className="board-perspective" ref={board}><Board mode={mode}/></div>
-          <div className="lab-bottom"><span className="lab-caption">GO ON, TRY SOMETHING.</span><div className="demo-controls" aria-label="Board demo mode">{[<Zap size={14}/>,<Wifi size={14}/>,<RotateCw size={14}/>].map((icon,i)=><button key={i} className={mode===i?'selected':''} aria-pressed={mode===i} onClick={()=>setMode(i)}>{icon}{['Blink','Connect','Move'][i]}</button>)}</div></div>
-          <div className="terminal-status" aria-live="polite"><span>›</span> {['digitalWrite(LED, your_first_idea);','WiFi.begin("a_little_possibility");','servo.write(something_awesome);'][mode]}<span className="cursor">▌</span></div>
+          <div className="lab-bottom"><span className="lab-caption">try it →</span><div className="demo-controls" aria-label="Board demo mode">{[<Zap size={14}/>,<Wifi size={14}/>,<RotateCw size={14}/>].map((icon,i)=><button key={i} className={mode===i?'selected':''} aria-pressed={mode===i} onClick={()=>setMode(i)}>{icon}{['Blink','Connect','Move'][i]}</button>)}</div></div>
+          <div className="terminal-status" aria-live="polite"><span>›</span> {['digitalWrite(LED, HIGH);','WiFi.begin(ssid, password);','servo.write(90);'][mode]}<span className="cursor">▌</span></div>
         </div>
-        <a href="#about" className="scroll-cue"><ArrowDown size={16}/> SCROLL TO GET INSPIRED</a>
-        <span className="hero-index">ESP32 / ENDLESS POSSIBILITIES</span>
+        <a href="#build" className="scroll-cue"><ArrowDown size={16}/> what would you make?</a>
       </section>
-      <div className="possibility-strip" aria-label="Code it. Connect it. Make it move."><div>{[0,1,2,3].map(i=><span key={i} aria-hidden={i>0}>CODE IT <span>✳</span> CONNECT IT <span>✳</span> MAKE IT MOVE <span>✳</span> MAKE IT YOURS <span>✳</span></span>)}</div></div>
-      <section id="about" className="about section-shell section-space">
-        <div className="section-label reveal"><span>01 / THE IDEA</span><ArrowDownLeft size={22}/></div>
-        <div className="about-content reveal"><h2>Your code deserves<br/>to leave the <span className="muted-word">screen.</span></h2><div className="about-bottom"><p>Actuate is a proposed, beginner-friendly <strong>You Ship, We Ship</strong> program built around the ESP32: a tiny microcontroller with a whole lot of potential. Learn embedded programming, play with sensors, explore wireless connections, and bring your own idea to life.</p><div className="tiny-board"><Cpu size={35}/><span>ONE LITTLE CHIP.<br/>A WHOLE NEW WORLD.</span></div></div></div>
-      </section>
+      <div className="possibility-strip" aria-label="Code it. Connect it. Make it move."><div>{[0,1,2,3].map(i=><span key={i} aria-hidden={i>0}>CODE IT <span>✳</span> CONNECT IT <span>✳</span> MAKE IT MOVE <span>✳</span></span>)}</div></div>
       <section id="build" className="build section-shell section-space">
-        <div className="section-heading reveal"><div><div className="eyebrow">02 / PICK YOUR POSSIBILITY</div><h2>What will you <span className="serif-word">bring to life?</span></h2></div><p>Software, hardware, or a bit of both. <br/>Make the ESP32 part of the idea.</p></div>
-        <div className="projects">{projects.map((project,i)=><article className="project-card reveal" key={project.type} style={{'--delay':`${i*70}ms`} as CSSProperties}><button className="project-tutorial-trigger" onClick={()=>openTutorial(project.title)} aria-label={`Open tutorial: ${project.title}`} aria-haspopup="dialog"/><div className="project-card-top"><span>0{i+1}</span><span>{project.category}</span><ArrowUpRight size={17}/></div><ProjectArt type={project.type}/><h3>{project.title}</h3><p>{project.description}</p><div className="tags">{project.tags.map(tag=><span key={tag}>{tag}</span>)}</div></article>)}</div>
-        <div className="build-footnote reveal"><Sparkles size={17}/><p>Have something else in mind? <strong>If an ESP32 is at its heart, let’s talk.</strong></p><a href={SLACK} target="_blank" rel="noreferrer">Share your idea <ArrowUpRight size={16}/></a></div>
+        <div className="section-heading reveal"><h2>What can you <span>build?</span></h2><p>Software, hardware, or both. Your call.</p></div>
+        <div className="projects">{projects.map((project,i)=><article className="project-card reveal" key={project.type} style={{'--delay':i*55+'ms', '--project-color':project.color} as CSSProperties}>
+          <ProjectArt type={project.type}/><div className="project-copy"><h3>{project.title}</h3><p>{project.description}</p></div><ArrowUpRight className="project-arrow" size={20}/>
+          <button className="project-tutorial-trigger" onClick={()=>openTutorial(project.title)} aria-label={'Open tutorial: '+project.title} aria-haspopup="dialog"/>
+        </article>)}</div>
+        <a className="text-link build-link reveal" href={SLACK} target="_blank" rel="noreferrer">Something else in mind? Tell us <ArrowUpRight size={17}/></a>
       </section>
-      <BoardPicker onTutorial={openTutorial} paused={paused}/>
       <section id="how" className="how section-shell section-space">
-        <div className="section-heading reveal"><div><div className="eyebrow">04 / THE EXCHANGE</div><h2>A little effort.<br/>A lot of <span className="serif-word">possibility.</span></h2></div><span className="draft-chip">PROPOSED PROGRAM</span></div>
-        <div className="exchange reveal"><article className="you-ship"><div className="exchange-label"><Code2 size={22}/><span>YOUR SIDE OF THE DEAL</span></div><h3>You ship<span>↗</span></h3><p>An original project that meaningfully uses the ESP32.<br/>Something you made. Something that works.</p><ul><li><Check/> Dream up an idea that’s yours</li><li><Check/> Build it, code it, figure it out</li><li><Check/> Share your code and show it in action</li></ul></article><div className="exchange-connector"><ArrowRight/></div><article className="we-ship"><div className="exchange-label"><Cpu size={22}/><span>WHAT WE’RE PLANNING</span></div><h3>We ship<span>↙</span></h3><p>The spark to get you started.<br/>And the support to keep you going.</p><ul><li><Check/> ESP32 boards</li><li><Check/> Parts or hardware grants</li><li><Check/> Tutorials and a community to build with</li></ul><div className="budget"><strong>$30–50</strong><span>target BOM for hardware-heavy builds<br/><small>Funding and details subject to approval.</small></span></div></article></div>
+        <div className="exchange reveal">
+          <article className="you-ship"><span className="exchange-number">01</span><h2>You ship.</h2><p>An original ESP32 project.<br/>Share your code and show it working.</p></article>
+          <article className="we-ship"><span className="exchange-number">02</span><h2>We ship.</h2><p>We’re working on ESP32 boards, parts grants,<br className="desktop-break"/> and tutorials to help you build.</p></article>
+        </div>
+        <p className="budget reveal">Building hardware? Aim for a <strong>$30–50</strong> parts list.</p>
       </section>
       <section id="start" className="beginner section-shell section-space">
-        <div className="beginner-copy reveal"><div className="eyebrow">05 / START FROM ZERO</div><h2>Never used an<br/>MCU before?<br/><span className="serif-word">That’s fine.</span></h2><p><strong>No hardware experience required.</strong> An MCU is a tiny computer you can teach to do things. Affordable ESP32 development boards, built-in wireless, and a huge community make this a beginner-friendly place to start. Blink a light, read a sensor, then build up to your big idea.</p><a className="text-link" href={SLACK} target="_blank" rel="noreferrer">Find your people in #actuate <ArrowUpRight size={18}/></a></div>
-        <div className="learning-panel reveal"><div className="learning-top"><Terminal size={17}/><span>YOUR FIRST “IT WORKS!”</span><span className="draft-chip">PLANNED GUIDES</span></div>{[['01','Meet your ESP32','Setup, tools & your first upload'],['02','Hello, real world','GPIO, LEDs & reading sensors'],['03','Let’s get connected','Wi-Fi, Bluetooth & web servers'],['04','Make your move','Motors, servos & a starter robot arm']].map(([n,title,desc],i)=><div className="lesson" key={n}><button className="lesson-guide-trigger" onClick={()=>openTutorial(title)} aria-label={`Open tutorial: ${title}`} aria-haspopup="dialog"/><span className="lesson-number">{n}</span><div><h3>{title}</h3><p>{desc}</p></div>{i===0?<Zap size={19}/>:<ArrowDown size={17}/>}</div>)}<div className="learning-note"><span className="status-dot"/> Tutorials are in the works. Curiosity is the only prerequisite.</div></div>
+        <div className="beginner-copy reveal"><span className="hand-note">start here ↴</span><h2>First time?<br/>You’re in.</h2><p>The ESP32 is a good first microcontroller.<br/>Start with a blinking LED. Go from there.</p><a className="text-link" href={SLACK} target="_blank" rel="noreferrer">Ask us in #actuate <ArrowUpRight size={18}/></a></div>
+        <div className="learning-panel reveal"><p className="learning-title">Guides we’re making</p>{['Your first upload','LEDs & sensors','Wi-Fi & Bluetooth','Motors & servos'].map((title,i)=><button className="lesson" key={title} onClick={()=>openTutorial(title)} aria-label={'Open tutorial: '+title} aria-haspopup="dialog"><span className="lesson-number">0{i+1}</span><span>{title}</span><ArrowUpRight size={18}/></button>)}</div>
       </section>
-      <section id="faq" className="faq section-shell section-space"><div className="faq-heading reveal"><div className="eyebrow">06 / GOOD QUESTIONS</div><h2>A few things<br/>you might <br/><span className="serif-word">be wondering.</span></h2><p>Still have a question?</p><a href={SLACK} target="_blank" rel="noreferrer" className="text-link">Ask in #actuate <ArrowUpRight size={17}/></a></div><div className="faq-list reveal">{faqs.map(([q,a])=><details key={q}><summary>{q}<ChevronDown size={18}/></summary><p>{a}</p></details>)}</div></section>
-      <section id="rsvp" className="final-cta section-shell reveal"><div className="cta-traces" aria-hidden="true"/><div className="eyebrow"><span className="status-dot"/> YOUR NEXT “WHAT IF” STARTS HERE</div><h2>Go on.<br/>Make it <span className="serif-word">do something.</span></h2><p>A tiny board. An idea that won’t leave you alone.<br/>Let’s see what happens.</p><a className="button dark-button" href={RSVP} target="_blank" rel="noreferrer">Count me in <ArrowUpRight size={20}/></a><div className="cta-note">Actuate is a draft YSWS. Help us bring it to life.</div><Zap className="cta-bolt" aria-hidden="true"/></section>
+      <section id="faq" className="faq section-shell section-space"><div className="faq-heading reveal"><h2>Questions?</h2><a href={SLACK} target="_blank" rel="noreferrer" className="text-link">Come ask us <ArrowUpRight size={17}/></a></div><div className="faq-list reveal">{faqs.map(([q,a])=><details key={q}><summary>{q}<ChevronDown size={18}/></summary><p>{a}</p></details>)}</div></section>
+      <section id="rsvp" className="final-cta section-shell reveal"><div className="cta-traces" aria-hidden="true"/><div><h2>Got an idea?</h2><p>We’d like to see it.</p></div><a className="button dark-button" href={RSVP} target="_blank" rel="noreferrer">RSVP for Actuate <ArrowUpRight size={20}/></a><Zap className="cta-bolt" aria-hidden="true"/></section>
     </main>
-    <footer className="footer section-shell"><div><a className="brand" href="#" aria-label="Actuate home"><Mark/><span>actuate.</span></a><p>Made for curious minds & a world that moves.</p></div><div className="footer-links"><a href="https://hackclub.com" target="_blank" rel="noreferrer">Hack Club <ArrowUpRight size={13}/></a><a href={SLACK} target="_blank" rel="noreferrer">#actuate <ArrowUpRight size={13}/></a><button onClick={()=>setPaused(!paused)} aria-pressed={paused}>{paused?<Play size={13}/>:<Pause size={13}/>} {paused?'Play motion':'Pause motion'}</button></div><div className="footer-bottom"><span>AN INDEPENDENTLY PROPOSED HACK CLUB YSWS</span><span>BUILT WITH CURIOSITY. POWERED BY ESP32.</span></div></footer>
-    <dialog ref={dialog} className="rsvp-dialog" onCancel={()=>setModal(false)} onClose={()=>setModal(false)} onClick={e=>{if(e.target===e.currentTarget){ const r=e.currentTarget.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)setModal(false);}}} aria-labelledby="rsvp-title" aria-describedby="rsvp-description">
+    <footer className="footer section-shell"><a className="brand" href="#" aria-label="Actuate home"><Mark/><span>actuate.</span></a><div className="footer-links"><a href="https://hackclub.com" target="_blank" rel="noreferrer">Hack Club <ArrowUpRight size={13}/></a><a href={SLACK} target="_blank" rel="noreferrer">#actuate <ArrowUpRight size={13}/></a><button onClick={()=>setPaused(!paused)} aria-pressed={paused}>{paused?<Play size={13}/>:<Pause size={13}/>} {paused?'Play motion':'Pause motion'}</button></div></footer>
+    <dialog ref={dialog} className="tutorial-dialog" onCancel={()=>setModal(false)} onClose={()=>setModal(false)} onClick={e=>{if(e.target===e.currentTarget){ const r=e.currentTarget.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)setModal(false);}}} aria-labelledby="tutorial-title" aria-describedby="tutorial-description">
       <button autoFocus className="dialog-close icon-button" onClick={()=>setModal(false)} aria-label="Close tutorial panel"><X/></button>
-      <div className="dialog-icon"><Radio size={30}/></div>
-      <div className="eyebrow">A LITTLE MORE TINKERING TO DO.</div>
-      <h2 id="rsvp-title">Tutorial not<br/>made yet.</h2>
-      <p id="rsvp-description">Join the Slack to see what’s happening! The guide for <strong>{tutorial?.replace(/[.!?]+$/, "")}</strong> is still in the works. Come hang out in <strong>#actuate</strong> for updates and help from other builders.</p>
+      <p className="dialog-topic">{tutorial}</p><h2 id="tutorial-title">Tutorial not<br/>made yet.</h2>
+      <p id="tutorial-description">Join the Slack to see what’s happening!</p>
       <a className="button primary" href={SLACK} target="_blank" rel="noreferrer">Join #actuate <ExternalLink size={17}/></a>
       <a className="new-to-slack" href="https://hackclub.com/slack/" target="_blank" rel="noreferrer">New to Hack Club? Start here <ArrowUpRight size={14}/></a>
     </dialog>
